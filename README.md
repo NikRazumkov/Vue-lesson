@@ -1,2 +1,2 @@
 # Vue-lesson
-Lesson from WebForMySelf create SPA Cars
+Lesson from WebForMySelf create SPA Moto
