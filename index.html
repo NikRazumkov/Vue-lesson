@@ -20,14 +20,20 @@
 			<div class="col-md-4">
 				<div class="form-group">
 					<label for="search">Find your moto</label>
-					<input type="text" class="form-control" id="search" placeholder="Name, model ...">
+					<input
+						 type="text"
+						 class="form-control"
+						 id="search"
+						 placeholder="Name, model ..."
+						 v-model="search"
+					>
 				</div>
 				<hr>
 				<ul class="list-group">
 					<li
-							v-for="(moto, index) in motos"
+							v-for="(moto, index) in filteredMotos"
 						 	class="list-group-item list-group-item-action pointer"
-						 	v-on:click="selectMoto(index)"
+						 	@click="selectMoto(index)"
 						 	:class="{'active': selectedMotoIndex === index}"
 					>
 							{{ moto.vendor }} {{ moto.model }} 
@@ -51,13 +57,94 @@
 							<li>Vendor - <strong>{{moto.vendor}}</strong></li>
 							<li>Max Speed - <strong>{{moto.maxspeed}}</strong></li>
 						</ul>
-						<p v-if="phoneVisibility">{{moto.phone}}</p>
-						<button class="btn btn-outline-success mr-3" v-on:click="phoneVisibility = true">Show phone</button>	
-						<button class="btn btn-primary">Buy</button>	
+						<div class="phone-block">
+							<transition name="phone">
+								<p v-if="phoneVisibility">{{moto.phone}}</p>
+							</transition>
+						</div>
+						<button
+							 class="btn btn-outline-success mr-3"
+							 @click="phoneVisibility = !phoneVisibility"
+						>{{ phoneBtnText }}</button>	
+						<button class="btn btn-primary" @click="modalVisibility = true">Buy</button>	
 					</div>
 				</div>
 			</div>
 		</div>
+		<div class="row pt-3" v-if="logs.length !== 0">
+			<div class="col-md-12">
+				<ul class="list-group">
+					  <li
+					  	v-for="log in logs"	
+					  	class="list-group-item"
+					  	:class="{
+					  			'list-group-item-success' : log.type === 'success',
+					  			'list-group-item-secondary' : log.type === 'cancel'
+					  		}"
+					  >
+					  {{log.text}} Date: {{log.date | date}}
+					</li>
+				</ul>
+			</div>
+		</div>
+		<transition name="modal">
+			<div class="modal fade show" v-if="modalVisibility" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Do you want to buy this moto?</h5>
+		        <button
+		        	 type="button"
+		        	 class="close"
+		        	 data-dismiss="modal"
+		        	 aria-label="Close"
+		        	 @click="modalVisibility = false"
+		        >
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      <div class="row">
+						<div class="col-md-5 tac">
+							<img
+							 	:src="moto.image"
+							 	:alt="moto.model"
+							 	class="rounded moto-img"
+							>
+						</div>
+						<div class="col-md-7 pt-2">
+							<h5>Moto details</h5>
+							<ul>
+								<li>Model - <strong>{{ moto.model }}</strong></li>
+								<li>Vendor - <strong>{{moto.vendor}}</strong></li>
+								<li>Max Speed - <strong>{{moto.maxspeed}}</strong></li>
+							</ul>
+						</div>
+					</div>
+		      </div>
+		      <div class="modal-footer">
+		      	<button
+		        	 type="button"
+		        	 class="btn btn-primary"
+		        	 @click="newOrder"
+		        >
+		        Buy
+		        </button>
+		        <button
+		        	 type="button"
+		        	 class="btn btn-secondary"
+		        	 data-dismiss="modal"
+		        	 @click="cancelOrder"
+		        >
+		        Cancel
+		        </button>
+		      </div>
+		    </div>
+		  </div></div>
+		</transition>
+		<transition name="fade">
+			<div class="modal-backdrop show fade" v-if="modalVisibility"></div>
+		</transition>
 	</div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
