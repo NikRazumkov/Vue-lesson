@@ -1,12 +1,4 @@
-const moto = (vendor, model, maxspeed, phone, image) => ({vendor, model, maxspeed, phone, image})
-
 const log = (text, type, date = new Date()) => ({text, type, date})
-
-const motos = [
-	moto('KXD', 'PB-008', '60km/h', '+375 29 101-22-33', 'images/pb-008.jpg' ),
-	moto('NITRO Motors', 'PS-77', '65km/h', '+375 29 223-23-54', 'images/ps-77.jpg' ),
-	moto('NITRO Motors', 'PS-50 Rocket', '70km/h', '+375 29 101-22-33', 'images/ps-50.jpg' )
-]
 
 new Vue({
 	el: '#app',
@@ -15,7 +7,8 @@ new Vue({
 		moto: motos[0],
 		logs: [],
 		selectedMotoIndex: 0,
-		phoneVisibility: false,
+		descVisibility: false,
+		imgVisibility: true,
 		search: '',
 		modalVisibility: false
 	},
@@ -27,23 +20,20 @@ new Vue({
 		newOrder() {
 			this.modalVisibility = false
 			this.logs.push(
-				log(`Success order: ${this.moto.vendor} ${this.moto.model}`, 'success')
+				log(`${this.moto.name} ${this.moto.model} ${this.moto.engine}`, 'success')
 				)
 		},
 		cancelOrder() {
 			this.modalVisibility = false
-				this.logs.push(
-					log(`Cancelled order: ${this.moto.vendor} ${this.moto.model}`, 'cancel')
-				)	
 		}
 	},
 	computed: {
-		phoneBtnText() {
-			return this.phoneVisibility ? 'Hide phone' : 'Show phone'
+		descBtnText() {
+			return this.descVisibility ? 'Скрыть' : 'Описание'
 		},
 		filteredMotos() {
 			return this.motos.filter(moto => {
-				return moto.vendor.indexOf(this.search) > -1 || moto.model.indexOf(this.search) > -1
+				return moto.name.indexOf(this.search) > -1 || moto.type.indexOf(this.search) > -1 || moto.model.indexOf(this.search) > -1 || moto.engine.indexOf(this.search) > -1 || moto.color.indexOf(this.search) > -1
 			})
 		}
 	},

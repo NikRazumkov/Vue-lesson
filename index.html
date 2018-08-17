@@ -10,21 +10,21 @@
 	
 </head>
 <body>
-	<div class="container pt-5" id="app">
+	<div class="container" id="app">
 		<div class="row mb-3">
-			<div class="col">
-				<h1>Moto application</h1>
+			<div class="col  pt-3">
+				<h1>RACER</h1>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="form-group">
-					<label for="search">Find your moto</label>
+					<label for="search">Найдите Вашу модель Racer</label>
 					<input
 						 type="text"
 						 class="form-control"
 						 id="search"
-						 placeholder="Name, model ..."
+						 placeholder="Название, модель, объем ..."
 						 v-model="search"
 					>
 				</div>
@@ -36,41 +36,54 @@
 						 	@click="selectMoto(index)"
 						 	:class="{'active': selectedMotoIndex === index}"
 					>
-							{{ moto.vendor }} {{ moto.model }} 
+							{{ moto.name }} {{ moto.model }} {{ moto.engine }} 
 					</li>
 				</ul>
 			</div>
-			<div class="col-md-8 pt-3">
+			<div class="col-md-9">
 				<div class="row">
-					<div class="col-md-5 tac">
-						<h2>{{moto.vendor}}</h2>
-						<img
-						 	:src="moto.image"
-						 	:alt="moto.model"
-						 	class="rounded moto-img"
+					<div class="col-md-7 tac">
+						<h2>{{ moto.type }} <br> {{ moto.name }} {{ moto.model }} {{ moto.engine }}</h2>
+						<div
+							v-if="imgVisibility"
 						>
-					</div>
-					<div class="col-md-7 pt-2">
-						<h5>Moto details</h5>
-						<ul>
-							<li>Model - <strong>{{ moto.model }}</strong></li>
-							<li>Vendor - <strong>{{moto.vendor}}</strong></li>
-							<li>Max Speed - <strong>{{moto.maxspeed}}</strong></li>
-						</ul>
-						<div class="phone-block">
-							<transition name="phone">
-								<p v-if="phoneVisibility">{{moto.phone}}</p>
-							</transition>
+							<img
+							 	:src="moto.image"
+							 	:alt="moto.model"
+							 	class="rounded moto-img"
+							>
 						</div>
+
+						<transition name="description">
+							<div class="description-block mt-3">
+							<transition name="description">
+								<p class="bg-white" v-if="descVisibility">{{moto.description}}</p>
+								</transition>
+							</div>
+						</transition>
+					</div>
+					<div class="col-md-5 pt-2">
+						<h5>Краткое описание:</h5>
+						<ul>
+							<li>Название - <strong>{{ moto.name }}</strong></li>
+							<li>Модель - <strong>{{ moto.model }}</strong></li>
+							<li>Тип - <strong>{{moto.type}}</strong></li>
+							<li>Объем двигателя - <strong>{{moto.engine}}</strong></li>
+							<li>Цвет - <strong>{{moto.color}}</strong></li>
+						</ul>
+						<div class="price mb-3">Цена - <strong>{{ moto.price }} </strong> бел. р.</div>
+
 						<button
-							 class="btn btn-outline-success mr-3"
-							 @click="phoneVisibility = !phoneVisibility"
-						>{{ phoneBtnText }}</button>	
-						<button class="btn btn-primary" @click="modalVisibility = true">Buy</button>	
+							 class="btn btn-outline-success mr-3 "
+							 @click="descVisibility = !descVisibility"
+							 @click="imgVisibility = !imgVisibility"
+						>{{ descBtnText }}</button>	
+						<button class="btn btn-primary" @click="modalVisibility = true">Купить</button>	
 					</div>
 				</div>
 			</div>
 		</div>
+
 		<div class="row pt-3" v-if="logs.length !== 0">
 			<div class="col-md-12">
 				<ul class="list-group">
@@ -82,7 +95,7 @@
 					  			'list-group-item-secondary' : log.type === 'cancel'
 					  		}"
 					  >
-					  {{log.text}} Date: {{log.date | date}}
+					Заявка на <b>{{log.text}}</b> прошла успешно. Дата и время заказа: <b>{{log.date | date}}</b>. Менеджер свяжется с вами в ближайшее время.
 					</li>
 				</ul>
 			</div>
@@ -92,7 +105,7 @@
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title">Do you want to buy this moto?</h5>
+		        <h5 class="modal-title">Хотите купить этот мотоцикл?</h5>
 		        <button
 		        	 type="button"
 		        	 class="close"
@@ -104,31 +117,32 @@
 		        </button>
 		      </div>
 		      <div class="modal-body">
-		      <div class="row">
-						<div class="col-md-5 tac">
-							<img
-							 	:src="moto.image"
-							 	:alt="moto.model"
-							 	class="rounded moto-img"
-							>
-						</div>
-						<div class="col-md-7 pt-2">
-							<h5>Moto details</h5>
-							<ul>
-								<li>Model - <strong>{{ moto.model }}</strong></li>
-								<li>Vendor - <strong>{{moto.vendor}}</strong></li>
-								<li>Max Speed - <strong>{{moto.maxspeed}}</strong></li>
-							</ul>
-						</div>
-					</div>
+						<div class="order-form">
+							<form>
+							  <div class="form-group">
+							  	<h3>{{moto.name}} {{moto.model}}</h3>
+							    <label for="exampleFormControlInput1">Ваше имя</label>
+							    <input type="email" class="form-control mb-2" id="exampleFormControlInput1" placeholder="Введите Ваше имя...">
+							    <label for="exampleFormControlInput2">Email*</label>
+							    <input type="email" class="form-control mb-2" id="exampleFormControlInput2" placeholder="name@example.com">
+							    <label for="exampleFormControlInput3">Ваш телефон</label>
+							    <input type="email" class="form-control mb-2" id="exampleFormControlInput3" placeholder="+37529000000">
+							  </div>
+							  <div class="form-group">
+							    <label for="exampleFormControlTextarea1">Оставьте Ваше сообщение...</label>
+							    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+							  </div>
+							</form>
+						</div>	
 		      </div>
+
 		      <div class="modal-footer">
 		      	<button
 		        	 type="button"
 		        	 class="btn btn-primary"
 		        	 @click="newOrder"
 		        >
-		        Buy
+		        Заказать
 		        </button>
 		        <button
 		        	 type="button"
@@ -136,7 +150,7 @@
 		        	 data-dismiss="modal"
 		        	 @click="cancelOrder"
 		        >
-		        Cancel
+		        Позже..
 		        </button>
 		      </div>
 		    </div>
@@ -148,6 +162,7 @@
 	</div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+<script src="js/base.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
