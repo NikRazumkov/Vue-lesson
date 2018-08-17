@@ -8,7 +8,6 @@ new Vue({
 		logs: [],
 		selectedMotoIndex: 0,
 		descVisibility: false,
-		imgVisibility: true,
 		search: '',
 		modalVisibility: false
 	},

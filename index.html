@@ -44,8 +44,9 @@
 				<div class="row">
 					<div class="col-md-7 tac">
 						<h2>{{ moto.type }} <br> {{ moto.name }} {{ moto.model }} {{ moto.engine }}</h2>
+						<transition name="description">
 						<div
-							v-if="imgVisibility"
+							v-if="!descVisibility"
 						>
 							<img
 							 	:src="moto.image"
@@ -53,7 +54,7 @@
 							 	class="rounded moto-img"
 							>
 						</div>
-
+						</transition>
 						<transition name="description">
 							<div class="description-block mt-3">
 							<transition name="description">
@@ -76,7 +77,6 @@
 						<button
 							 class="btn btn-outline-success mr-3 "
 							 @click="descVisibility = !descVisibility"
-							 @click="imgVisibility = !imgVisibility"
 						>{{ descBtnText }}</button>	
 						<button class="btn btn-primary" @click="modalVisibility = true">Купить</button>	
 					</div>
